@@ -35,7 +35,8 @@
 inline uint64_t getNs() {
     struct timespec ts;
     //guaranteed synchronized across processors, averages 20ns/call on Ubuntu 12.04... Linux hrtimers have gotten really good! In comparison, rdtsc is 9ns.
-    clock_gettime(CLOCK_REALTIME, &ts);
+    //NOTE: CLOCK_MONOTONIC used instead of CLOCK_REALTIME to prevent backwards time jumps in Docker/VM environments where the wall clock can be adjusted by NTP or the hypervisor.
+    clock_gettime(CLOCK_MONOTONIC, &ts);
     return 1000000000L*ts.tv_sec + ts.tv_nsec;
 }
 

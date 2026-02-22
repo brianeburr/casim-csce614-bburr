@@ -1,0 +1,10 @@
+services:
+  casim:
+    build: .
+    container_name: casim
+    volumes:
+      - .:/app
+    command: sleep infinity
+    privileged: true
+    stdin_open: true
+    tty: true
