@@ -8,8 +8,15 @@ if [ "$#" -ne 2 ]; then
     exit 1
 fi
 
-# Use Windows-format path (pwd -W) to avoid Git Bash MSYS path mangling with Docker on Windows
-HOSTPATH="$(pwd -W)"
+# Use Windows-format path on Git Bash/MSYS to avoid path mangling with Docker; use pwd elsewhere
+case "$(uname -s)" in
+    MINGW*|CYGWIN*|MSYS*)
+        HOSTPATH="$(pwd -W)"
+        ;;
+    *)
+        HOSTPATH="$(pwd)"
+        ;;
+esac
 
 MSYS_NO_PATHCONV=1 docker run --rm \
     -v "${HOSTPATH}:/app" \
