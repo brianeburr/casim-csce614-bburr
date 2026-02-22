@@ -14,5 +14,5 @@ HOSTPATH="$(pwd -W)"
 MSYS_NO_PATHCONV=1 docker run --rm \
     -v "${HOSTPATH}:/app" \
     --privileged \
-    casim-csce614-bburr-casim \
+    casim-csce614 \
     bash -c "cd /app/zsim && ./hw2runscript_foreground '$1' '$2'"
