@@ -37,3 +37,19 @@ You need to compile the code each time you make a change.
 
 
 ###### For more information, check `zsim/README.md`
+
+
+GCC Change Notes:
+Seems like build errors are showing up, unexpected. Want to try with a lower version of gcc, matching remote
+
+
+# Install multiple versions
+sudo apt install gcc-11 g++-11 gcc-13 g++-13
+
+# Register them with priorities
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 90 --slave /usr/bin/g++ g++ /usr/bin/g++-13
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 80 --slave /usr/bin/g++ g++ /usr/bin/g++-11
+
+# Select active gcc
+sudo update-alternatives --config gcc
+

@@ -88,6 +88,8 @@ class BranchPredictorPAg {
             // bhsrIdx = 0;
             // phtIdx = (bhsr[bhsrIdx] ^ ((uint32_t)branchPc)) & phtMask;
 
+            // "Prediction" is determined by looking at the entry for the pattern history, which stores the 2-bit counter
+            // We don't need to do any work to determine what the prediction is, that's just a lookup/check for bit 1 being set (pred_val & 0b10)
             bool pred = pht[phtIdx] > 1;
 
             // info("BP Pred: 0x%lx bshr[%d]=%x taken=%d pht=%d pred=%d", branchPc, bhsrIdx, phtIdx, taken, pht[phtIdx], pred);
@@ -97,7 +99,44 @@ class BranchPredictorPAg {
                 pht[phtIdx] = taken? (pred? 3 : (pht[phtIdx]+1)) : (pred? (pht[phtIdx]-1) : 0); //2-bit saturating counter
             } else {
                 // Please implement Automaton 3 for update
+                // Behavior of 3A can be described with these bitwise transitions:
+                // When "Taken"
+                    // if the predictor already has bit 0b01, it will gain bit 0b10 : 1->3, 3->3
+                    // else, predictor does not have bit 0b01, so it will gain bit 0b01: 0->1, 2->3
+                // When "Not Taken"
+                    // if the predictor currently has bit 0b01, it will lose 0b01 : 1->0, 3->2
+                    // if the predictor does not have bit 0b01, it will lose 0b10 : 0->0, 2->0
+                
+                // While the above descpription seems convoluted, it allows for few conditions to decide the operation and bitwise variable needed to compute
+                // Significantly, it allows for the bitwise operand to be determined by only evaluating the (not)taken outcome and the presence of bit 0b01, together as follows)
+                // Unsure if bool true == 1, logic expects this, so create var here
+                // In digital, this would be a single bit input -> if C++ treats bool value of true as 1 always, then this (taken_int) is not necessary
+                uint8_t takenInt = taken ? 0b1 : 0b0;
+                uint8_t bitOpValue;
+                
+                if ((pht[phtIdx] & 0b01) == takenInt)
+                {
+                    // For taken case, we are here if bit 0b01 is set, we want to set 0b10
+                    // For not taken case, we are here is 0b01 is NOT set, we want to unset 0b10
+                    bitOpValue = 0b10;
+                }
+                else
+                {
+                    // For taken case, we are here if 0b01 is NOT set, we want to set 0b01
+                    // For not taken case, we are here if 0b01 is set, we want to unset 0b01
+                    bitOpValue = 0b01;
+                }
 
+                if (taken)
+                {
+                    // Branch was taken, so we should increase counter, by the bitOpValue
+                    pht[phtIdx] |= bitOpValue;
+                }
+                else
+                {
+                    // Branch was not taken, so we want to decrease the counter, by the bitOpValue
+                    pht[phtIdx] &= ~bitOpValue;
+                }
             }
             bhsr[bhsrIdx] = ((bhsr[bhsrIdx] << 1) & histMask ) | (taken? 1: 0); //we apply phtMask here, dependence is further away
 
