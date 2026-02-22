@@ -1,0 +1,7 @@
+# Shell scripts must use LF line endings so they work inside Linux containers
+*.sh text eol=lf
+entrypoint.sh text eol=lf
+setup_env text eol=lf
+zsim/hw2runscript text eol=lf
+zsim/hw2runscript_foreground text eol=lf
+zsim/hw4runscript text eol=lf

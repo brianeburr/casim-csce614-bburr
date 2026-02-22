@@ -8,10 +8,11 @@ fi
 
 venv/bin/pip install --quiet scons || true
 
+sed -i 's/\r$//' setup_env zsim/hw2runscript zsim/hw2runscript_foreground zsim/hw4runscript zsim/hw4runscript_foreground run_zsim_consecutive.sh 2>/dev/null || true
 source setup_env
 
 chmod +x tools/pin-2.14-71313-gcc.4.4.7-linux/intel64/bin/pinbin || true
-chmod +x zsim/hw2runscript zsim/hw4runscript run_zsim_consecutive.sh || true
+chmod +x zsim/hw2runscript zsim/hw2runscript_foreground zsim/hw4runscript run_zsim_consecutive.sh || true
 
 if [ ! -d "benchmarks" ] && [ -f "benchmarks.zip" ]; then
     zip -F benchmarks.zip --out single-benchmark.zip && \
