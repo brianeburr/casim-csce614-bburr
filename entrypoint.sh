@@ -21,6 +21,9 @@ if [ ! -d "benchmarks" ] && [ -f "benchmarks.zip" ]; then
 fi
 
 echo 0 > /proc/sys/kernel/yama/ptrace_scope || true
-(cd zsim && ../venv/bin/scons -j4) || true
+if [ ! -f "zsim/build/opt/zsim" ]; then
+    (cd zsim && ../venv/bin/scons -j4) || true
+fi
 
+cd /app/zsim
 exec "$@"

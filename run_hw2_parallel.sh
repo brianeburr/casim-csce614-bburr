@@ -3,6 +3,26 @@
 BENCHMARKS="blackscholes bodytrack canneal dedup fluidanimate freqmine streamcluster swaptions x264"
 AUTOMATONS="A2 A3"
 
+# Resolve host path (cross-platform: Git Bash on Windows vs Linux/Mac)
+case "$(uname -s)" in
+    MINGW*|CYGWIN*|MSYS*)
+        HOSTPATH="$(pwd -W)"
+        ;;
+    *)
+        HOSTPATH="$(pwd)"
+        ;;
+esac
+
+# Build zsim once before launching parallel simulations to avoid contention over zsim/build/
+echo "Pre-building zsim..."
+MSYS_NO_PATHCONV=1 docker run --rm \
+    -v "${HOSTPATH}:/app" \
+    --privileged \
+    casim-csce614 \
+    bash -c "true"
+echo "Build step complete."
+echo ""
+
 PIDS=()
 
 for automaton in $AUTOMATONS; do
