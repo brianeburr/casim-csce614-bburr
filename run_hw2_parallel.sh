@@ -18,7 +18,7 @@ echo "Pre-building zsim..."
 MSYS_NO_PATHCONV=1 docker run --rm \
     -v "${HOSTPATH}:/app" \
     --privileged \
-    casim-csce614 \
+    casim-csce614-zsim \
     bash -c "true"
 echo "Build step complete."
 echo ""

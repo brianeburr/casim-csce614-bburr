@@ -49,7 +49,7 @@ The Docker setup automates all environment and build steps (venv, scons, benchma
 Build once before using any of the methods below.
 
 ```bash
-docker build -t casim-csce614 .
+docker build -t casim-csce614-zsim .
 ```
 
 Or with Docker Compose (also builds if needed):
@@ -69,7 +69,7 @@ Start a long-lived container you can attach to repeatedly.
 docker compose up -d
 
 # Attach an interactive shell
-docker compose exec casim bash
+docker compose exec zsim bash
 
 # Stop the container when done
 docker compose down
@@ -95,7 +95,7 @@ HOSTPATH="$(pwd -W)"   # Windows (Git Bash) — use $(pwd) on Linux/Mac
 MSYS_NO_PATHCONV=1 docker run --rm \
     -v "${HOSTPATH}:/app" \
     --privileged \
-    casim-csce614 \
+    casim-csce614-zsim \
     bash -c "cd /app/zsim && ./hw2runscript_foreground blackscholes A2"
 ```
 

@@ -21,5 +21,5 @@ esac
 MSYS_NO_PATHCONV=1 docker run --rm \
     -v "${HOSTPATH}:/app" \
     --privileged \
-    casim-csce614 \
+    casim-csce614-zsim \
     bash -c "cd /app/zsim && ./hw2runscript_foreground '$1' '$2'"
