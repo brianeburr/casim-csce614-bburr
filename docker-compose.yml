@@ -1,7 +1,7 @@
 services:
-  casim:
+  ccasim-csce614:
     build: .
-    container_name: casim
+    container_name: casim-csce614
     volumes:
       - .:/app
     command: sleep infinity
